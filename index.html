@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цифровой двойник СИЗ — учебный дашборд</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">📡 СИЗ·RFID</div>
+    <nav aria-label="Разделы"><ul class="nav">
+      <li><button class="nav-btn" data-view="twin" aria-current="page">🧍 Двойник</button></li>
+      <li><button class="nav-btn" data-view="list">📋 Жизненный цикл</button></li>
+      <li><button class="nav-btn" data-view="case">🚆 Пример SNCF</button></li>
+      <li><button class="nav-btn" data-view="limits">ℹ️ О проекте</button></li>
+    </ul></nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Мониторинг состояния и жизненного цикла СИЗ с RFID</h1>
+        <p class="muted">🏭 Условное предприятие «Северный профиль», Санкт-Петербург</p>
+      </div>
+      <div class="meta">
+        <p>Время данных: <strong id="dataTime">—</strong></p>
+        <p>Успешная загрузка: <strong id="loadTime">—</strong></p>
+        <button id="refreshBtn" class="btn" type="button">⟳ Обновить</button>
+      </div>
+    </header>
+
+    <p class="notice" role="note">Данные являются учебной имитацией и не заменяют официальную корпоративную систему учёта СИЗ. Реальный мониторинг требует интеграции с RFID-оборудованием и учётной системой предприятия.</p>
+
+    <section class="cards" aria-label="Ключевые показатели">
+      <article class="card"><h2>Всего единиц СИЗ в системе</h2><p><span class="num" id="v1">—</span> <span class="muted">шт.</span></p><p class="muted" id="n1">Зарегистрированные RFID-метки</p></article>
+      <article class="card"><h2>На стирке / в обслуживании</h2><p><span class="num" id="v2">—</span> <span class="muted">шт.</span></p><p class="muted" id="n2">Сейчас в стирке или ремонте</p></article>
+      <article class="card"><h2>Требуют замены (просрочен срок носки)</h2><p><span class="num" id="v3">—</span> <span class="muted">шт.</span></p><p class="muted" id="n3">Срок истёк или «Скоро замена»</p></article>
+    </section>
+
+    <div class="reqbar">
+      <span id="statusText" class="status-text" role="status" aria-live="polite">Загрузка…</span>
+      <span id="statusDetail" class="muted"></span>
+      <button id="retryBtn" class="btn ghost" type="button" hidden>Повторить запрос</button>
+    </div>
+
+    <section id="view-twin" class="view">
+      <div class="twin">
+        <aside class="panel left">
+          <h2>Сотрудник</h2>
+          <label class="muted" for="empSel">Выберите сотрудника</label>
+          <select id="empSel"></select>
+          <dl class="emp">
+            <dt>ID</dt><dd id="eId">—</dd>
+            <dt>Должность</dt><dd id="eRole">—</dd>
+            <dt>Подразделение</dt><dd id="eDept">—</dd>
+            <dt>Трудоустройство</dt><dd id="eHired">—</dd>
+          </dl>
+          <h2>Категории СИЗ</h2>
+          <div id="cats" class="cats"></div>
+          <div id="summary" class="summary" role="status"></div>
+        </aside>
+
+        <div class="panel stage">
+          <svg id="model" viewBox="0 0 220 410" role="group" aria-label="Цифровая модель сотрудника с СИЗ">
+            <ellipse class="floor" cx="110" cy="396" rx="70" ry="9"/>
+            <g class="part" data-kind="suit" tabindex="0" role="button">
+              <rect x="64" y="104" width="92" height="142" rx="18"/>
+              <rect x="38" y="110" width="24" height="118" rx="12"/><rect x="158" y="110" width="24" height="118" rx="12"/>
+              <rect x="80" y="236" width="27" height="136" rx="10"/><rect x="113" y="236" width="27" height="136" rx="10"/>
+              <rect class="stripe" x="64" y="176" width="92" height="7"/><rect class="stripe" x="80" y="334" width="27" height="6"/><rect class="stripe" x="113" y="334" width="27" height="6"/>
+            </g>
+            <g class="part" data-kind="boots" tabindex="0" role="button">
+              <rect x="74" y="368" width="34" height="23" rx="9"/><rect x="112" y="368" width="34" height="23" rx="9"/>
+            </g>
+            <g class="part" data-kind="gloves" tabindex="0" role="button">
+              <circle cx="50" cy="238" r="14"/><circle cx="170" cy="238" r="14"/>
+            </g>
+            <rect class="skin" x="99" y="84" width="22" height="24" rx="8"/>
+            <circle class="skin" cx="110" cy="66" r="27"/>
+            <g class="part" data-kind="ears" tabindex="0" role="button">
+              <circle cx="82" cy="70" r="9"/><circle cx="138" cy="70" r="9"/>
+            </g>
+            <g class="part" data-kind="resp" tabindex="0" role="button">
+              <ellipse cx="110" cy="87" rx="14" ry="10"/>
+            </g>
+            <g class="part" data-kind="glasses" tabindex="0" role="button">
+              <rect x="90" y="62" width="40" height="11" rx="5"/>
+            </g>
+            <g class="part" data-kind="helmet" tabindex="0" role="button">
+              <path d="M77 60a33 31 0 0 1 66 0z"/><rect x="71" y="58" width="78" height="8" rx="4"/>
+            </g>
+          </svg>
+          <p class="hint muted">Нажмите на элемент экипировки — справа появятся подробности.</p>
+          <div id="detail" class="detail" role="status" aria-live="polite">Нет данных</div>
+        </div>
+
+        <aside class="panel right">
+          <h2>СИЗ сотрудника</h2>
+          <div id="ppeList" class="ppe-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-list" class="view" hidden>
+      <div class="panel">
+        <h2>Все единицы СИЗ: выдача, стирка, ремонт, списание</h2>
+        <div class="tablewrap"><table>
+          <thead><tr><th>RFID</th><th>Сотрудник</th><th>СИЗ</th><th>Где сейчас</th><th>Статус</th><th>Годен до</th><th>Стирок</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section id="view-case" class="view" hidden>
+      <div class="panel">
+        <h2>🚆 Наглядный пример: SNCF + Cepovett</h2>
+        <p>Французская железнодорожная компания SNCF и производитель спецодежды Cepovett Group пилотируют RFID-нить E-Thread (Primo1D) для отслеживания около 40 000 единиц униформы и СИЗ сотрудников.</p>
+        <p>Нить встраивается под термонаклейку, выдерживает до 200 промышленных стирок и температуру до 200 °C, позволяет отслеживать выдачу, стирку, ремонт и списание. Это доказывает, что мониторинг СИЗ на основе RFID — реальная практика, а не только теория из статьи.</p>
+        <p><a href="https://www.rfidjournal.com/news/french-railroad-and-uniform-company-pilot-rfid-thread/222182" target="_blank" rel="noopener noreferrer">Источник: RFID Journal ↗</a></p>
+      </div>
+    </section>
+
+    <section id="view-limits" class="view" hidden>
+      <div class="panel">
+        <h2>ℹ️ О проекте и ограничения</h2>
+        <ul>
+          <li>Источник данных — локальная имитация API в <code>main.js</code>: у каждой единицы есть RFID-номер, сотрудник, срок носки, место в цикле и статус.</li>
+          <li>Данные сгенерированы программой и не описывают реальные СИЗ.</li>
+          <li>Нет связи с 1С, Go-RFID и считывателями; нет авторизации и истории изменений.</li>
+          <li>Фигура сотрудника нарисована кодом (SVG) и служит схемой, а не фотографией.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
